@@ -1,0 +1,167 @@
+{
+  "commands": {
+    "code": [
+      [
+        "cargo",
+        "build",
+        "--workspace",
+        "--locked"
+      ],
+      [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked"
+      ],
+      [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ]
+    ],
+    "governance": [
+      [
+        ".tooling/bin/spec-spine",
+        "check",
+        "--fail-on-warn"
+      ],
+      [
+        ".tooling/bin/spec-spine",
+        "lint",
+        "--fail-on-warn"
+      ],
+      [
+        ".tooling/bin/spec-spine",
+        "index",
+        "coverage"
+      ],
+      [
+        ".tooling/bin/spec-spine",
+        "index",
+        "check",
+        "--fail-on-unresolved"
+      ]
+    ]
+  },
+  "files": [
+    {
+      "digest": "2bdc03d35fc9bf69b5d01392cfdce95a0c67e70d806e714327fae56ed22d61a6",
+      "path": ".github/workflows/statecraft-ci.yml",
+      "role": "workflow"
+    },
+    {
+      "digest": "127e158d0c15ddfdf56b15be237f9ee9a37555c480d52b0c9c3e2efd9008a111",
+      "path": ".github/workflows/statecraft-ai-review.yml",
+      "role": "workflow"
+    },
+    {
+      "digest": "5b4b6d10ad01172d5f4213f5e24aedcf5fbef38932c2b0f62c93c0cb686f648c",
+      "path": "scripts/statecraft/install-spec-spine.sh",
+      "role": "script"
+    },
+    {
+      "digest": "c5ef22115777401c3f0fbeb67dc9201c899ba01090460a2508a534865dc4e5b4",
+      "path": "scripts/statecraft/gate.sh",
+      "role": "script"
+    },
+    {
+      "digest": "4f9b8b232b15fd03fb26861e4d220c6678f8c7428fb68f830fe182e5a04e13cc",
+      "path": "scripts/statecraft/ci-gate.sh",
+      "role": "script"
+    },
+    {
+      "digest": "00cafc212200796bd826c368a3928a3a2bc7c225861affd8f07bbc2438c604fe",
+      "path": "scripts/statecraft/ai-review.sh",
+      "role": "script"
+    },
+    {
+      "digest": "95499a8134d524700772605d87040e5f9837becbf3982bc70788712ca2725ee4",
+      "path": ".github/CODEOWNERS",
+      "role": "codeowners"
+    }
+  ],
+  "id": "github-actions-rust",
+  "identity": "e0732d4bf0db3b0181b42432d5a1fe4ad4745d90b55b4049c9acda5b70105126",
+  "jobs": {
+    "ai-review": {
+      "optional": false,
+      "pull_request": "required-review",
+      "push": "inapplicable",
+      "required": true
+    },
+    "code": {
+      "optional": false,
+      "pull_request": "required",
+      "push": "required",
+      "required": true
+    },
+    "governance": {
+      "optional": false,
+      "pull_request": "required",
+      "push": "required",
+      "required": true
+    },
+    "review-exception": {
+      "optional": false,
+      "pull_request": "rc-exception",
+      "push": "inapplicable",
+      "required": true
+    }
+  },
+  "parameters": {
+    "code_owners": [
+      "@bartekus"
+    ],
+    "default_branch": "main",
+    "diff_cap": 2000,
+    "exclude": [
+      ".statecraft/derived"
+    ],
+    "release_branch_pattern": "release/*"
+  },
+  "prerequisites": {
+    "local": [
+      "an exact spec-spine pin",
+      "rust-toolchain.toml",
+      "Cargo.lock",
+      "a git work tree"
+    ]
+  },
+  "remote": [
+    "Settings, Actions: Actions enabled; the workflow token read-only by default",
+    "the secret CLAUDE_CODE_OAUTH_TOKEN set by the operator (gh secret set CLAUDE_CODE_OAUTH_TOKEN); its value is never in a log, a file or a message",
+    "branch protection on the default branch: require the status check ci-gate, and branches up to date",
+    "branch protection on the default branch: require code-owner review, so a change to the profile's files needs a review its author cannot give (S-3)",
+    "the Environment statecraft-review-exception with the owner as a required reviewer, for release-candidate exceptions (S-1)"
+  ],
+  "review": {
+    "credential": "CLAUDE_CODE_OAUTH_TOKEN",
+    "never_an_approval": true,
+    "release_branch_pattern": "release/*",
+    "release_candidate_rule": {
+      "exception_environment": "statecraft-review-exception",
+      "requires": "a review (findings or no-findings), or an owner exception"
+    },
+    "skip_classes": [
+      "draft",
+      "fork",
+      "dependabot",
+      "oversized",
+      "transient"
+    ],
+    "tool": "claude-code",
+    "tool_version": "2.1.116"
+  },
+  "revision": 1
+}

@@ -1,0 +1,11 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "setup_acceptance",
+    "path": "",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7e07a57d00561f920dbc417aa65a309c8fde0047d71ac1204842b3ff7181cf82"
+}
